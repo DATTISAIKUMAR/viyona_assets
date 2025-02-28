@@ -4,8 +4,6 @@ from controllers.util import *
 desktop = APIRouter()
 
 
-
-
 @desktop.get('/desktop_dashboard')
 async def desktop_dashboard(request:Request):
     try:
@@ -15,7 +13,6 @@ async def desktop_dashboard(request:Request):
         unassign_data = Desktopdata.objects(status="Unassigned")
 
     
-
         content = {
             'request': request,
             'total_systems': len(total_systems),
