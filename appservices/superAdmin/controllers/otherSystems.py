@@ -7,24 +7,28 @@ other_systems = APIRouter()
 
 @other_systems.get('/other_systems_dashboard')
 async def other_systems_dashboard(request:Request):
+    try:
     
-    total_systems = other_systemsdata.objects()
-    assign_data = other_systemsdata.objects(status="Assigned")
-    issue_data = other_systemsdata.objects(status="Issue")
-    unassign_data = other_systemsdata.objects(status="Unassigned")
+        total_systems = other_systemsdata.objects()
+        assign_data = other_systemsdata.objects(status="Assigned")
+        issue_data = other_systemsdata.objects(status="Issue")
+        unassign_data = other_systemsdata.objects(status="Unassigned")
 
- 
+    
 
-    content = {
-        'request': request,
-        'total_systems': len(total_systems),
-        'assign_data': len(assign_data),
-        'data': total_systems,
-        'issue_data': len(issue_data),
-        'unassign_data': len(unassign_data)
-    }
+        content = {
+            'request': request,
+            'total_systems': len(total_systems),
+            'assign_data': len(assign_data),
+            'data': total_systems,
+            'issue_data': len(issue_data),
+            'unassign_data': len(unassign_data)
+        }
 
-    return templates.TemplateResponse('other_systems_dashboard.html',content)
+        return templates.TemplateResponse('other_systems_dashboard.html',content)
+    except Exception as e:
+        message="exception accure.."
+        return templates.TemplateResponse('other_systems_dashboard.html',{'request':request,'message':message})
 
 @other_systems.post('/other_systems_add_systems', response_class=HTMLResponse)
 async def handle_other_systems_add_systems(request: Request):
