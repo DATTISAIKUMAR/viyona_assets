@@ -36,60 +36,68 @@ async def signup_page(request: Request):
 
 @router.post('/login1',response_class=HTMLResponse)
 async def login_page(request:Request):
-    form_data=await request.form()
-    email=form_data.get('email')
-    password=form_data.get('password')
-    date=datetime.now()
-    data=Signup.objects(email=email,password=password).first()
-    if not data or ('@' not in email[2:-5] and '.' not in email[-5::]):
-        message="Invalid Password or Email..."
-        return templates.TemplateResponse('login.html',{'request':request,'message':message})
-    Logfiles_data(loginid=data.id,date=date).save()    
-    name_empty=Managedata.objects(name='')
-    if name_empty:
-        name_empty.update(status="Unassigned")
-    total_systems=Managedata.objects()
-    desktop_total=Desktopdata.objects()
-  
-    content = {
-        'request': request,
-        'total_systems': len(total_systems),
-         'desktop_total':len(desktop_total)
-        
-    }
-    return templates.TemplateResponse('asserts.html',content)
+    try:
+        form_data=await request.form()
+        email=form_data.get('email')
+        password=form_data.get('password')
+        date=datetime.now()
+        data=Signup.objects(email=email,password=password).first()
+        if not data or ('@' not in email[2:-5] and '.' not in email[-5::]):
+            message="Invalid Password or Email..."
+            return templates.TemplateResponse('login.html',{'request':request,'message':message})
+        Logfiles_data(loginid=data.id,date=date).save()    
+        name_empty=Managedata.objects(name='')
+        if name_empty:
+            name_empty.update(status="Unassigned")
+        total_systems=Managedata.objects()
+        desktop_total=Desktopdata.objects()
+    
+        content = {
+            'request': request,
+            'total_systems': len(total_systems),
+            'desktop_total':len(desktop_total)
+            
+        }
+        return templates.TemplateResponse('asserts.html',content)
+    except Exception as e:
+        message="exception occure..."
+        return templates.TemplateResponse('asserts.html',{'request':request,'message':message})
 
 
 @router.post('/signup',response_class=HTMLResponse)
 async def signup(request: Request):
-    form_data = await request.form()
-    name = form_data.get('name')
-    email = form_data.get('email')
-    password = form_data.get('password')
-    password1 = form_data.get('password1')
-    role = form_data.get('role')
-    reason=form_data.get('reason')
-   
-    date= datetime.now()
-    required_fields=[name,email,password,password1,role,reason]
+    try:
+        form_data = await request.form()
+        name = form_data.get('name')
+        email = form_data.get('email')
+        password = form_data.get('password')
+        password1 = form_data.get('password1')
+        role = form_data.get('role')
+        reason=form_data.get('reason')
+    
+        date= datetime.now()
+        required_fields=[name,email,password,password1,role,reason]
 
-    if password != password1:
-        message = "Passwords do not match!"
-        return templates.TemplateResponse('logfile.html', {'request': request, 'message': message})
-    if('@' not in email[2:-5] and '.' not in email[-5::]):
-        message='Invalid email.....'
-        return templates.TemplateResponse('logfile.html', {'request': request, 'message': message})
-    data=Signup.objects(email=email, password=password).first()
-    if(data):
-        message="user already exits.."
-        return templates.TemplateResponse('logfile.html', {'request': request, 'message': message})
-    if(all(required_fields)):
-        Signup(name=name, email=email, password=password, role=role,reason=reason,Date=date).save()
-    else:
-        message="Please enter valid fields.."
-        return templates.TemplateResponse('logfile.html', {'request': request, 'message': message})
+        if password != password1:
+            message = "Passwords do not match!"
+            return templates.TemplateResponse('logfile.html', {'request': request, 'message': message})
+        if('@' not in email[2:-5] and '.' not in email[-5::]):
+            message='Invalid email.....'
+            return templates.TemplateResponse('logfile.html', {'request': request, 'message': message})
+        data=Signup.objects(email=email, password=password).first()
+        if(data):
+            message="user already exits.."
+            return templates.TemplateResponse('logfile.html', {'request': request, 'message': message})
+        if(all(required_fields)):
+            Signup(name=name, email=email, password=password, role=role,reason=reason,Date=date).save()
+        else:
+            message="Please enter valid fields.."
+            return templates.TemplateResponse('logfile.html', {'request': request, 'message': message})
 
-    return RedirectResponse('/logfile1', status_code=303)
+        return RedirectResponse('/logfile1', status_code=303)
+    except Exception as e:
+        message="exception occure..."
+        return templates.TemplateResponse('asserts.html',{'request':request,'message':message})
 
 @router.get('/logfile1')
 async def adminfiles(request:Request):
