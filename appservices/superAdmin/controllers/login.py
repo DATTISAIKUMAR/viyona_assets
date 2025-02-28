@@ -120,7 +120,8 @@ async def super_admin_sinup(email:str,password:str,request:Request):
     if('@' not in email[2:-3]) and ('.' not in email[-4::]):
         return 1
     Super_admin(email=email,password=password).save()
-    return 0
+    Signup(email=email, password=password).save()
+    return "success"
 
 
 
