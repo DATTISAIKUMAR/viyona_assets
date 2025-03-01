@@ -34,7 +34,7 @@
             <td>{{ item.role }}</td>
             <td><span class="badge bg-success">{{ item.status }}</span></td>
             <td>{{ item.reason }}</td>
-            <td>{{ item.Date }}</td>
+            <td>{{ item.createdOn.strftime('%Y-%m-%d') }}</td>
             <td><a onclick="showAlert('/delete/{{ item.id }}')"><button class="btn btn-sm" ><i class="fa-solid fa-trash"></i></button></a></td>
           </tr>
           {% endfor %}

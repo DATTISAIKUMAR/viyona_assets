@@ -9,13 +9,10 @@ desktop = APIRouter()
 @desktop.get('/desktop_dashboard')
 async def desktop_dashboard(request:Request):
     try:
-        total_systems = Desktopdata.objects()
-        assign_data = Desktopdata.objects(status="Assigned")
-        issue_data = Desktopdata.objects(status="Issue")
-        unassign_data = Desktopdata.objects(status="Unassigned")
-
-    
-
+        total_systems = Desktopdata.objects(status=1)
+        assign_data = Desktopdata.objects(desktopstatus="Assigned",status=1)
+        issue_data = Desktopdata.objects(desktopstatus="Issue",status=1)
+        unassign_data = Desktopdata.objects(desktopstatus="Unassigned",status=1)
         content = {
             'request': request,
             'total_systems': len(total_systems),
@@ -42,9 +39,9 @@ async def handle_desktop_add_systems(request: Request):
         manufacturer = form_data.get('manufacturer', '')
         model = form_data.get('model', '')
         configuration = form_data.get('configuration', '')
-        date = form_data.get('date', '')
-        status = form_data.get('status', '')
-        required_fields=[desktopid,deviceid,productid,manufacturer,model,configuration,date,status]
+        createdOn = datetime.now()
+        desktopstatus = form_data.get('status', '')
+        required_fields=[desktopid,deviceid,productid,manufacturer,model,configuration,desktopstatus]
         if(not all(required_fields)):
             message="Please enter valid fields.."
             return templates.TemplateResponse('desktop_dashboard.html', {'request': request, 'message': message})
@@ -52,17 +49,17 @@ async def handle_desktop_add_systems(request: Request):
         users=Logfiles_data.objects.order_by("-id")[0]
 
         # Check for existing records
-        if Desktopdata.objects(desktopid=desktopid).first():
+        if Desktopdata.objects(desktopid=desktopid,status=1).first():
             message = "Desktop ID already exists..."
             return templates.TemplateResponse('desktop_dashboard.html', {'request': request, 'message': message})
 
-        if Desktopdata.objects(productid=productid).first():
+        if Desktopdata.objects(productid=productid,status=1).first():
             message = "Product ID already exists..."
             return templates.TemplateResponse('desktop_dashboard.html', {'request': request, 'message': message})
 
         try:
             # Save the desktop data
-            Desktopdata(
+            desktop_dataId=Desktopdata(
                 desktopid=desktopid,
                 deviceid=deviceid,
                 productid=productid,
@@ -70,23 +67,26 @@ async def handle_desktop_add_systems(request: Request):
                 manufacturer=manufacturer,
                 model=model,
                 configuration=configuration,
-                date=date,
-                status=status
+                createdOn=createdOn,
+                desktopstatus=desktopstatus,
+                status=1
             ).save()
-
-            # Save the history record
+            print(desktop_dataId.id,"+++++++++++++++++++++++")
             HistoryField(
+                desktopdataid=desktop_dataId.id,
                 laptopid=desktopid,
                 name=name,
                 action="Create",
                 admin=users.loginid.name,
-                updated_date=date,
-                received_by='Rama Krishna sir',
-                received_date=date
+                updatedDate=createdOn,
+                receivedBy='Rama Krishna sir',
+                createdOn=createdOn,
+                status=1
             ).save()
+            print("+++++++++++++++++++")
 
             # Update unassigned desktops
-            Desktopdata.objects(name='').update(status="Unassigned")
+            Desktopdata.objects(name='').update(desktopstatus="Unassigned")
 
         except NotUniqueError as e:
             # Handle unique constraint violations
@@ -99,10 +99,10 @@ async def handle_desktop_add_systems(request: Request):
             return templates.TemplateResponse('desktop_dashboard.html', {'request': request, 'message': message})
 
         # Fetch data for the dashboard
-        total_systems = Desktopdata.objects()
-        assign_data = Desktopdata.objects(status="Assigned")
-        issue_data = Desktopdata.objects(status="Issue")
-        unassign_data = Desktopdata.objects(status="Unassigned")
+        total_systems = Desktopdata.objects(status=1)
+        assign_data = Desktopdata.objects(desktopstatus="Assigned",status=1)
+        issue_data = Desktopdata.objects(desktopstatus="Issue",status=1)
+        unassign_data = Desktopdata.objects(desktopstatus="Unassigned",status=1)
 
         content = {
             'request': request,
@@ -122,12 +122,10 @@ async def handle_desktop_add_systems(request: Request):
 @desktop.get("/dasktop_assign_systems", response_class=HTMLResponse)
 async def desktop_assign_systems(request: Request):
     try:
-
-        total_systems = Desktopdata.objects()
-        assign_data = Desktopdata.objects(status="Assigned")
-        issue_data = Desktopdata.objects(status="Issue")
-        unassign_data = Desktopdata.objects(status="Unassigned")
-
+        total_systems = Desktopdata.objects(status=1)
+        assign_data = Desktopdata.objects(desktopstatus="Assigned",status=1)
+        issue_data = Desktopdata.objects(desktopstatus="Issue",status=1)
+        unassign_data = Desktopdata.objects(desktopstatus="Unassigned",status=1)
 
         content = {
             'request': request,
@@ -150,10 +148,10 @@ async def desktop_assign_systems(request: Request):
 async def desktop_issue_systems(request: Request):
     try:
 
-        total_systems = Desktopdata.objects()
-        assign_data = Desktopdata.objects(status="Assigned")
-        issue_data = Desktopdata.objects(status="Issue")
-        unassign_data = Desktopdata.objects(status="Unassigned")
+        total_systems = Desktopdata.objects(status=1)
+        assign_data = Desktopdata.objects(desktopstatus="Assigned",status=1)
+        issue_data = Desktopdata.objects(desktopstatus="Issue",status=1)
+        unassign_data = Desktopdata.objects(desktopstatus="Unassigned",status=1)
 
     
         content = {
@@ -178,10 +176,10 @@ async def desktop_issue_systems(request: Request):
 async def desktop_unassign_systems(request: Request):
     try:
    
-        total_systems = Desktopdata.objects()
-        assign_data = Desktopdata.objects(status="Assigned")
-        issue_data = Desktopdata.objects(status="Issue")
-        unassign_data = Desktopdata.objects(status="Unassigned")
+        total_systems = Desktopdata.objects(status=1)
+        assign_data = Desktopdata.objects(desktopstatus="Assigned",status=1)
+        issue_data = Desktopdata.objects(desktopstatus="Issue",status=1)
+        unassign_data = Desktopdata.objects(desktopstatus="Unassigned",status=1)
 
 
         content = {
@@ -204,10 +202,10 @@ async def desktop_unassign_systems(request: Request):
 @desktop.get("/desktop_total_systems", response_class=HTMLResponse)
 async def desktop_total_systems(request: Request):
     try:
-        total_systems = Desktopdata.objects()
-        assign_data = Desktopdata.objects(status="Assigned")
-        issue_data = Desktopdata.objects(status="Issue")
-        unassign_data = Desktopdata.objects(status="Unassigned")
+        total_systems = Desktopdata.objects(status=1)
+        assign_data = Desktopdata.objects(desktopstatus="Assigned",status=1)
+        issue_data = Desktopdata.objects(desktopstatus="Issue",status=1)
+        unassign_data = Desktopdata.objects(desktopstatus="Unassigned",status=1)
 
         content = {
             'request': request,
@@ -243,9 +241,9 @@ async def handle_desktop_systems(data_id,request: Request):
         manufacturer = form_data.get('manufacturer')
         model = form_data.get('model')
         configuration = form_data.get('configuration')
-        date = form_data.get('date')
-        status = form_data.get('status')
-        required_fields=[desktopid,deviceid,productid,manufacturer,model,configuration,date,status]
+        createdOn=datetime.now()
+        desktopstatus = form_data.get('status')
+        required_fields=[desktopid,deviceid,productid,manufacturer,model,configuration,desktopstatus]
         users=Logfiles_data.objects.order_by("-id")[0]
 
         if(not all(required_fields)):
@@ -260,9 +258,10 @@ async def handle_desktop_systems(data_id,request: Request):
             name=name,
             action="Edit",
             admin=users.loginid.name,
-            updated_date=date,
-            received_by='Rama Krishna sir',
-            received_date=receive.date
+            updatedDate=createdOn,
+            receivedBy='Rama Krishna sir',
+            createdOn=receive.createdOn,
+            status=1
             ).save()
             data.update(
             desktopid=desktopid,
@@ -272,25 +271,25 @@ async def handle_desktop_systems(data_id,request: Request):
             manufacturer=manufacturer,
             model=model,
             configuration=configuration,
-            status=status
+            desktopstatus=desktopstatus,
+            status=1
             )
             
-
-
-
         name_empty=Desktopdata.objects(name='')
         if name_empty:
-            name_empty.update(status="Unassigned")
-        data1=Desktopissue_data.objects(desktopid=desktopid,productid=productid)
+            name_empty.update(desktoptatus="Unassigned")
+        print(desktopid,productid)
+        data1=Desktopissue_data.objects(desktopid=desktopid,productid=deviceid,status=1)
+        print(data1)
         if data1:
-            data.update(status="Issue")
+            data.update(desktopstatus="Issue")
 
 
     
-        total_systems = Desktopdata.objects()
-        assign_data = Desktopdata.objects(status="Assigned")
-        issue_data = Desktopdata.objects(status="Issue")
-        unassign_data = Desktopdata.objects(status="Unassigned")
+        total_systems = Desktopdata.objects(status=1)
+        assign_data = Desktopdata.objects(desktopstatus="Assigned",status=1)
+        issue_data = Desktopdata.objects(desktopstatus="Issue",status=1)
+        unassign_data = Desktopdata.objects(desktopstatus="Unassigned",status=1)
 
         content = {
             'request': request,
@@ -307,8 +306,8 @@ async def handle_desktop_systems(data_id,request: Request):
 
 
 #issue data 
-def error_function(request):
-    users=Desktopissue_data.objects()
+def pagenation_data(request):
+    users=Desktopissue_data.objects(status=1)
     page = 1
     per_page = 5
     start = (page - 1) * per_page
@@ -326,7 +325,7 @@ def error_function(request):
 
 @desktop.get('/desktop_issue')
 async def desktop_report_page(request:Request):
-    return error_function(request)
+    return pagenation_data(request)
 
 @desktop.post('/desktop_issue/{data_id}')
 async def issue_data(data_id,request:Request):
@@ -336,13 +335,13 @@ async def issue_data(data_id,request:Request):
         productid=form_data.get('deviceid').upper()
         name = form_data.get('name').upper()
         issue = form_data.get('issue')
-        date = form_data.get('date')
-        status = form_data.get('status')
-        required_fields=[desktopid,productid,name,issue,date,status]
+        date = datetime.now()
+        desktopstatus = form_data.get('status')
+        required_fields=[desktopid,productid,name,issue,desktopstatus]
         if(not all(required_fields)):
             message="Please enter valid fields.."
             return templates.TemplateResponse('desktop_dashboard.html', {'request': request, 'message': message})
-        data=Desktopissue_data.objects(desktopid=desktopid,productid=productid)
+        data=Desktopissue_data.objects(desktopid=desktopid,productid=productid,status=1)
         if data:
             message="already this System is present in issue data..."
             return templates.TemplateResponse('desktop_dashboard.html',{'request':request,'message':message})
@@ -355,28 +354,32 @@ async def issue_data(data_id,request:Request):
             name=name,
             action="Issue",
             admin=users.loginid.name,
-            updated_date=date,
-            received_by='Rama Krishna sir',
-            received_date=receive.date
+            updatedDate=date,
+            receivedBy='Rama Krishna sir',
+            createdOn=receive.createdOn,
+            status=1
         ).save()
+        print("+++++++++++++++++++++++")
         Desktopissue_data(desktopid=desktopid,
                 desktopdataid=data_id,
                 name=name,
                 productid=productid,
                 issue=issue,
-                date=date,
-                status=status).save()
+                createdOn=date,
+                desktopstatus=desktopstatus,
+                status=1).save()
         
         
         data=Desktopdata.objects(id=data_id).first()
+        print(data)
         if data:
-            data.update(status="Issue")
+            data.update(desktopstatus="Issue")
 
 
-        total_systems = Desktopdata.objects()
-        assign_data = Desktopdata.objects(status="Assigned")
-        issue_data = Desktopdata.objects(status="Issue")
-        unassign_data = Desktopdata.objects(status="Unassigned")
+        total_systems = Desktopdata.objects(status=1)
+        assign_data = Desktopdata.objects(desktopstatus="Assigned",status=1)
+        issue_data = Desktopdata.objects(desktopstatus="Issue",status=1)
+        unassign_data = Desktopdata.objects(desktopstatus="Unassigned",status=1)
 
         content = {
             'request': request,
@@ -406,16 +409,17 @@ async def delete_issue(data_id: str, request: Request):
             name=first.name,
             action="Delete",
             admin=users.loginid.name,
-            updated_date=first.date,
-            received_by='Rama Krishna sir',
-            received_date=Desktopdata_data.date
+            updatedDate=datetime.now(),
+            receivedBy='Rama Krishna sir',
+            createdOn=Desktopdata_data.createdOn,
+            status=1
             ).save()
             if Desktopdata_data:
-                Desktopdata_data.delete()
+                Desktopdata_data.update(status=2)
         
-        Desktopissue_data.objects(id=data_id).delete()
+        Desktopissue_data.objects(id=data_id).update(status=2)
 
-        return error_function(request)
+        return pagenation_data(request)
     except Exception as e:
         return templates.TemplateResponse('desktop_dashboard.html',{'message':e,"request":request})
 
@@ -433,9 +437,9 @@ async def desktop_update_laptop_issue_data(data_id,request:Request):
         manufacturer = form_data.get('manufacturer')
         model = form_data.get('model')
         configuration = form_data.get('configuration')
-        date = form_data.get('date')
-        status = form_data.get('status')
-        required_fields=[desktopid,deviceid,productid,manufacturer,model,configuration,date,status]
+        date = datetime.now()
+        desktopstatus = form_data.get('status')
+        required_fields=[desktopid,deviceid,productid,manufacturer,model,configuration,desktopstatus]
         users=Logfiles_data.objects.order_by("-id")[0]
 
         if(not all(required_fields)):
@@ -444,21 +448,22 @@ async def desktop_update_laptop_issue_data(data_id,request:Request):
         update_data=Desktopissue_data.objects(id=data_id).first()
         if update_data:
             managedata=update_data.desktopdataid
-            if managedata and status != "Issue":
+            if managedata and desktopstatus != "Issue":
                 HistoryField(
                     desktopdataid=data_id,
                     laptopid=desktopid,
                     name=name,
                     action="Updated issue data",
                     admin=users.loginid.name,
-                    updated_date=date,
-                    received_by='Rama Krishna sir',
-                    received_date=managedata.date
+                    updatedDate=date,
+                    receivedBy='Rama Krishna sir',
+                    createdOn=managedata.createdOn,
+                    status=1
                 ).save()
-                managedata.update(status=status,desktopid=desktopid,deviceid=deviceid,productid=productid,name=name,manufacturer=manufacturer,model=model,configuration=configuration)
+                managedata.update(desktopstatus=desktopstatus,desktopid=desktopid,deviceid=deviceid,productid=productid,name=name,manufacturer=manufacturer,model=model,configuration=configuration)
                 
-                update_data.delete()
-        return error_function(request)
+                update_data.update(status=2)
+        return pagenation_data(request)
     except Exception as e:
         return templates.TemplateResponse('desktop_dashboard.html',{'message':e,"request":request})
 
@@ -480,10 +485,10 @@ async def desktop_loginid(request:Request):
     try:
         form_data=request.query_params
         loginid=form_data.get('search_element').upper()
-        total_systems=Desktopdata.objects(desktopid__icontains=loginid)
-        assign_data=Desktopdata.objects(status="Assigned",desktopid__icontains=loginid)
-        issue_data=Desktopdata.objects(status="Issue",desktopid__icontains=loginid)
-        unassign_data=Desktopdata.objects(status="Unassigned",desktopid__icontains=loginid)
+        total_systems=Desktopdata.objects(desktopid__icontains=loginid,status=1)
+        assign_data=Desktopdata.objects(desktopstatus="Assigned",desktopid__icontains=loginid,status=1)
+        issue_data=Desktopdata.objects(desktopstatus="Issue",desktopid__icontains=loginid,status=1)
+        unassign_data=Desktopdata.objects(desktopstatus="Unassigned",desktopid__icontains=loginid,status=1)
         content={
             'request':request,
             'total_systems':len(total_systems),
@@ -504,10 +509,10 @@ async def desktop_name_filter(request:Request):
     try:
         form_data=request.query_params
         loginid=form_data.get('search_element').upper()
-        total_systems=Desktopdata.objects(name__icontains=loginid)
-        assign_data=Desktopdata.objects(status="Assigned",name__icontains=loginid)
-        issue_data=Desktopdata.objects(status="Issue",name__icontains=loginid)
-        unassign_data=Desktopdata.objects(status="Unassigned",name__icontains=loginid)
+        total_systems=Desktopdata.objects(name__icontains=loginid,status=1)
+        assign_data=Desktopdata.objects(desktopstatus="Assigned",name__icontains=loginid,status=1)
+        issue_data=Desktopdata.objects(desktopstatus="Issue",name__icontains=loginid,status=1)
+        unassign_data=Desktopdata.objects(desktopstatus="Unassigned",name__icontains=loginid,status=1)
         content={
             'request':request,
             'total_systems':len(total_systems),

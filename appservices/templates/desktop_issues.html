@@ -25,8 +25,8 @@
             <td>{{ item.productid }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.issue }}</td>
-            <td><span class="badge bg-success">{{ item.status }}</span></td>
-            <td>{{ item.date }}</td>
+            <td><span class="badge bg-success">{{ item.desktopstatus }}</span></td>
+            <td>{{ item.createdOn.strftime('%Y-%m-%d') }}</td>
             <td><a onclick="showAlert('/desktop_delete_issue/{{item.id}}')"><button class="btn btn-sm"><i class="fa-solid fa-trash"></i></button></a>
             
             
@@ -92,10 +92,10 @@
         
 
             <!-- Assigned date  -->
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="issue" class="form-label">Assigned Date *</label>
               <input type="date" class="form-control" id="issue" rows="3" placeholder="Assigned date" name="date" value="{{ item.date }}" required>
-            </div>
+            </div> -->
 
           <!-- Status -->
           <div class="mb-3">

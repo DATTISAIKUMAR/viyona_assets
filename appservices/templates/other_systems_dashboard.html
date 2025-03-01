@@ -122,15 +122,15 @@
         <tbody>
           {% for item in data %}
           <tr>
-            <td>{{ item.other_systemsid }}</td>
+            <td>{{ item.otherSystemsid }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.deviceid }}</td>
             <td>{{ item.productid }}</td>
             <td>{{ item.manufacturer }}</td>
             <td>{{ item.model }}</td>
             <td>{{ item.configuration }}</td>
-            <td><span class="badge bg-success">{{ item.status }}</span></td>
-            <td>{{ item.date }}</td>
+            <td><span class="badge bg-success">{{ item.othersystemStatus }}</span></td>
+            <td>{{ item.createdOn }}</td>
             <td>
               <a  class="mx-3" data-bs-toggle="modal" data-bs-target="#exampleModal-{{ item.id }}"><i class="fas fa-exclamation-circle"></i>
               </a>
@@ -148,7 +148,7 @@
                 <!-- Laptop ID -->
                 <div class="mb-3">
                   <label for="laptopId" class="form-label">other_systems ID *</label>
-                  <input type="text" class="form-control" id="laptopId" placeholder="Enter other_systems ID" required name="other_systemsid" value="{{ item.other_systemsid }}">
+                  <input type="text" class="form-control" id="laptopId" placeholder="Enter other_systems ID" required name="other_systemsid" value="{{ item.otherSystemsid}}">
                 </div>
 
                 <div class="mb-3">
@@ -169,11 +169,11 @@
                 </div>
       
                   <!-- Assigned date  -->
-                  <div class="mb-3">
+                  <!-- <div class="mb-3">
                     <label for="issue" class="form-label">Issue Date *</label>
                     <input type="date" class="form-control" id="issue" rows="3" placeholder="Assigned date" name="date" required value="{{ item.date }}">
                   </div>
-      
+       -->
                 <!-- Status -->
                 <div class="mb-3">
                   <label for="status" class="form-label">Status *</label>
@@ -217,7 +217,7 @@
           <!-- Laptop ID -->
           <div class="mb-3">
             <label for="laptopId" class="form-label">other_systems ID *</label>
-            <input type="text" class="form-control" id="laptopId" placeholder="Enter other_systems ID" required name="other_systemsid" value="{{ item.other_systemsid }}">
+            <input type="text" class="form-control" id="laptopId" placeholder="Enter other_systems ID" required name="other_systemsid" value="{{ item.otherSystemsid }}">
           </div>
 
           <!-- Laptop ID -->
@@ -258,17 +258,17 @@
         
 
             <!-- Assigned date  -->
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="issue" class="form-label">Assigned Date *</label>
               <input type="date" class="form-control" id="issue" rows="3" placeholder="Assigned date" name="date" value="{{ item.date }}" required>
-            </div>
+            </div> -->
 
           <!-- Status -->
           <div class="mb-3">
             <label for="status" class="form-label">Status *</label>
             <select class="form-select" id="status" required name="status" value="{{ item.status}}">
               <option value="Assigned">Assigned</option>
-              <option value="Issue">Issue Reported</option>
+              <!-- <option value="Issue">Issue Reported</option> -->
               <option value="Unassigned">Unassigned</option>
             </select>
           </div>
@@ -349,17 +349,17 @@
         
 
             <!-- Assigned date  -->
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="issue" class="form-label">Assigned Date *</label>
               <input type="date" class="form-control" id="issue" rows="3" placeholder="Assigned date" name="date" required>
-            </div>
+            </div> -->
 
           <!-- Status -->
           <div class="mb-3">
             <label for="status" class="form-label">Status *</label>
             <select class="form-select" id="status" required name="status">
               <option value="Assigned">Assigned</option>
-              <option value="Issue">Issue Reported</option>
+              <!-- <option value="Issue">Issue Reported</option> -->
               <option value="Unassigned">Unassigned</option>
             </select>
           </div>

@@ -18,6 +18,7 @@
             <th scope="col">Admin Name</th>
             <th scope="col">Email</th>
             <th scope="col">DateTime</th>
+            <th scope="col">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -25,7 +26,8 @@
           <tr>
             <td>{{ item.loginid.name }}</td>
             <td>{{ item.loginid.email }}</td>
-            <td>{{ item.date }}</td>
+            <td>{{ item.createdOn.strftime('%Y-%m-%d') }}</td>
+            <td>{{ item.status}}</td>
           </tr>
           {% endfor %}
         </tbody>

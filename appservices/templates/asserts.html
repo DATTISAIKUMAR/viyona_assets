@@ -6,6 +6,7 @@
 <div class="container py-5">
     <div class="row g-4">
         <!-- Laptops -->
+         {{message}}
         <div class="col-12 col-sm-6 col-lg-3">
             <a href="{{ url_for('total_systems')}}" class="asset-card laptops">
                 <div>
@@ -47,7 +48,7 @@
             <a href="{{ url_for('other_systems_dashboard') }}" class="asset-card other-assets">
                 <div>
                     <h5>OTHER ASSETS</h5>
-                    <div class="count">{{other_systems_total}}</div>
+                    <div class="count">{{other_systems}}</div>
                 </div>
                 <div class="icon text-warning">
                     <i class="bi bi-collection"></i>
