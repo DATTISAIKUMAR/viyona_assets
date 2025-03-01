@@ -20,10 +20,10 @@ class Signup(Document):
 class Managedata(Document):
     laptopid=StringField()
     name=StringField()
-    serial_no=StringField()
+    serialNo=StringField()
     product=StringField()
     configuration=StringField()
-    received_by=StringField(default=None)
+    receivedBy=StringField(default=None)
     createdOn=DateTimeField()
     status=IntField()
     laptopStatus=StringField()
@@ -34,7 +34,7 @@ class Issue_data(Document):
     managedataId=ReferenceField(Managedata)
     laptopid=StringField()
     name=StringField()
-    serial_no=StringField()
+    serialNo=StringField()
     issue=StringField()
     createdOn=DateTimeField()
     status=IntField()
@@ -44,7 +44,7 @@ class Issue_data(Document):
  
    
 class other_systemsdata(Document):
-    other_systemsid=StringField()
+    otherSystemsid=StringField()
     deviceid=StringField()
     productid=StringField()
     manufacturer=StringField()
@@ -56,7 +56,7 @@ class other_systemsdata(Document):
     status=IntField()
  
 class other_systemsissue_data(Document):
-    other_systemsdataid=ReferenceField(other_systemsdata)
+    otherSystemsdataid=ReferenceField(other_systemsdata)
     deviceId = StringField()
     productid=StringField()
     name=StringField()
@@ -64,10 +64,6 @@ class other_systemsissue_data(Document):
     createdOn=DateTimeField()
     othersystemStatus=StringField()
     status=IntField()
- 
- 
- 
- 
  
 class Logfiles_data(Document):
     loginid=ReferenceField("Signup")
@@ -111,7 +107,7 @@ class Desktopissue_data(Document):
 class HistoryField(Document):
     desktopdataid=ReferenceField(Desktopdata)
     laptopdataid=ReferenceField(Managedata)
-    other_systemsdataid=ReferenceField(other_systemsdata)
+    otherSystemsdataid=ReferenceField(other_systemsdata)
     desktopid=StringField()
     laptopid=StringField()
     name=StringField()

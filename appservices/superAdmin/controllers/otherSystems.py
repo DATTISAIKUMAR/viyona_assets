@@ -4,11 +4,9 @@ from controllers.util import *
 other_systems = APIRouter()
 
 
-
 @other_systems.get('/other_systems_dashboard')
 async def other_systems_dashboard(request:Request):
     try:
-    
         total_systems = other_systemsdata.objects()
         assign_data = other_systemsdata.objects(status="Assigned")
         issue_data = other_systemsdata.objects(status="Issue")
@@ -81,7 +79,7 @@ async def handle_other_systems_add_systems(request: Request):
                 action="Create",
                 admin=users.loginid.name,
                 updated_date=date,
-                received_by='Rama Krishna sir',
+                receivedBy='Rama Krishna sir',
                 received_date=date
             ).save()
 
@@ -264,7 +262,7 @@ async def handle_other_systems_systems(data_id,request: Request):
             action="Edit",
             admin=users.loginid.name,
             updated_date=date,
-            received_by='Rama Krishna sir',
+            receivedBy='Rama Krishna sir',
             received_date=receive.date
             ).save()
             data.update(
@@ -363,7 +361,7 @@ async def issue_data(data_id,request:Request):
             action="Issue",
             admin=users.loginid.name,
             updated_date=date,
-            received_by='Rama Krishna sir',
+            receivedBy='Rama Krishna sir',
             received_date=receive.date
         ).save()
         other_systemsissue_data(deviceId=other_systemsid,
@@ -415,7 +413,7 @@ async def delete_issue(data_id: str, request: Request):
             action="Delete",
             admin=users.loginid.name,
             updated_date=first.date,
-            received_by='Rama Krishna sir',
+            receivedBy='Rama Krishna sir',
             received_date=other_systemsdata_data.date
             ).save()
             if other_systemsdata_data:
@@ -463,7 +461,7 @@ async def other_systems_update_laptop_issue_data(data_id,request:Request):
                     action="Updated issue data",
                     admin=users.loginid.name,
                     updated_date=date,
-                    received_by='Rama Krishna sir',
+                    receivedBy='Rama Krishna sir',
                     received_date=managedata.date
                 ).save()
                 managedata.update(status=status,other_systemsid=other_systemsid,deviceid=deviceid,productid=productid,name=name,manufacturer=manufacturer,model=model,configuration=configuration)

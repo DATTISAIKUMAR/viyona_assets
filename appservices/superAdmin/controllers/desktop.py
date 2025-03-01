@@ -81,7 +81,7 @@ async def handle_desktop_add_systems(request: Request):
                 action="Create",
                 admin=users.loginid.name,
                 updated_date=date,
-                received_by='Rama Krishna sir',
+                receivedBy='Rama Krishna sir',
                 received_date=date
             ).save()
 
@@ -261,7 +261,7 @@ async def handle_desktop_systems(data_id,request: Request):
             action="Edit",
             admin=users.loginid.name,
             updated_date=date,
-            received_by='Rama Krishna sir',
+            receivedBy='Rama Krishna sir',
             received_date=receive.date
             ).save()
             data.update(
@@ -356,7 +356,7 @@ async def issue_data(data_id,request:Request):
             action="Issue",
             admin=users.loginid.name,
             updated_date=date,
-            received_by='Rama Krishna sir',
+            receivedBy='Rama Krishna sir',
             received_date=receive.date
         ).save()
         Desktopissue_data(desktopid=desktopid,
@@ -407,7 +407,7 @@ async def delete_issue(data_id: str, request: Request):
             action="Delete",
             admin=users.loginid.name,
             updated_date=first.date,
-            received_by='Rama Krishna sir',
+            receivedBy='Rama Krishna sir',
             received_date=Desktopdata_data.date
             ).save()
             if Desktopdata_data:
@@ -452,7 +452,7 @@ async def desktop_update_laptop_issue_data(data_id,request:Request):
                     action="Updated issue data",
                     admin=users.loginid.name,
                     updated_date=date,
-                    received_by='Rama Krishna sir',
+                    receivedBy='Rama Krishna sir',
                     received_date=managedata.date
                 ).save()
                 managedata.update(status=status,desktopid=desktopid,deviceid=deviceid,productid=productid,name=name,manufacturer=manufacturer,model=model,configuration=configuration)

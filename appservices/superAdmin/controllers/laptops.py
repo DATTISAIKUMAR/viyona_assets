@@ -24,7 +24,7 @@ async def handle_add_systems(request: Request):
         form_data = await request.form()
         laptopid = form_data.get("laptopid").upper()
         name = form_data.get("name").upper()
-        serial_no = form_data.get("serial_no")
+        serialNo = form_data.get("serialNo")
         product = form_data.get("product")
         configuration = form_data.get("configuration")
         receiver = form_data.get("receiver")
@@ -32,10 +32,10 @@ async def handle_add_systems(request: Request):
         laptopStatus = form_data.get("status")
 
         data = Managedata.objects(laptopid=laptopid, status=1)
-        data1 = Managedata.objects(serial_no=serial_no, status=1)
+        data1 = Managedata.objects(serialNo=serialNo, status=1)
         required_fields = [
             laptopid,
-            serial_no,
+            serialNo,
             product,
             configuration,
             receiver,
@@ -56,7 +56,7 @@ async def handle_add_systems(request: Request):
             laptopAddData = Managedata(
                 laptopid=laptopid,
                 name=name,
-                serial_no=serial_no,
+                serialNo=serialNo,
                 product=product,
                 configuration=configuration,
                 receivedBy=receiver,
@@ -75,7 +75,7 @@ async def handle_add_systems(request: Request):
                 updatedDate=createdOn,
                 receivedBy=receiver,
                 createdOn=datetime.now(),
-                status=1
+                status=1,
             ).save()
 
             name_empty = Managedata.objects(name="")
@@ -137,10 +137,10 @@ async def assign_systems(request: Request):
 @laptops.get("/issue_systems", response_class=HTMLResponse)
 async def issue_systems(request: Request):
     try:
-        total_systems = Managedata.objects()
-        assign_data = Managedata.objects(laptopStatus="Assigned")
-        issue_data = Managedata.objects(laptopStatus="Issue")
-        unassign_data = Managedata.objects(laptopStatus="Unassigned")
+        total_systems = Managedata.objects(status=1)
+        assign_data = Managedata.objects(laptopStatus="Assigned", status=1)
+        issue_data = Managedata.objects(laptopStatus="Issue", status=1)
+        unassign_data = Managedata.objects(laptopStatus="Unassigned", status=1)
 
         content = {
             "request": request,
@@ -202,7 +202,7 @@ async def total_systems(request: Request):
         }
         return templates.TemplateResponse("dashboard.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "dashboard.html", {"request": request, "message": message}
         )
@@ -307,7 +307,7 @@ async def history_laptopid(request: Request):
     try:
         form_data = request.query_params
         loginid = form_data.get("search_element").upper()
-        data = HistoryField.objects(laptopid__icontains=loginid)
+        data = HistoryField.objects(laptopid__icontains=loginid, status=1)
         content = {"request": request, "data": data}
         return templates.TemplateResponse("history.html", content)
     except Exception as e:
@@ -322,7 +322,7 @@ async def name_filter(request: Request):
     try:
         form_data = request.query_params
         loginid = form_data.get("search_element").upper()
-        data = HistoryField.objects(name__icontains=loginid)
+        data = HistoryField.objects(name__icontains=loginid, status=1)
         content = {"request": request, "data": data}
         return templates.TemplateResponse("history.html", content)
     except Exception as e:
@@ -385,15 +385,15 @@ async def handle_edit_systems(data_id, request: Request):
         form_data = await request.form()
         laptopid = form_data.get("laptopid").upper()
         name = form_data.get("name").upper()
-        serial_no = form_data.get("serial_no")
+        serialNo = form_data.get("serialNo")
         product = form_data.get("product")
         configuration = form_data.get("configuration")
-        createdOn = datetime.datetime.now()
+        createdOn = datetime.now()
         laptopStatus = form_data.get("status")
         data = Managedata.objects(id=data_id).first()
         required_fields = [
             laptopid,
-            serial_no,
+            serialNo,
             product,
             configuration,
             createdOn,
@@ -416,27 +416,29 @@ async def handle_edit_systems(data_id, request: Request):
                 updatedDate=createdOn,
                 receivedBy=receive.receivedBy,
                 createdOn=receive.createdOn,
+                status=1,
             ).save()
             data.update(
                 laptopid=laptopid,
                 name=name,
-                serial_no=serial_no,
+                serialNo=serialNo,
                 product=product,
                 configuration=configuration,
                 laptopStatus=laptopStatus,
+                status=1,
             )
 
         name_empty = Managedata.objects(name="")
         if name_empty:
             name_empty.update(laptopStatus="Unassigned")
-        data1 = Issue_data.objects(laptopid=laptopid, serial_no=serial_no)
+        data1 = Issue_data.objects(laptopid=laptopid, serialNo=serialNo)
         if data1:
             data.update(laptopStatus="Issue")
 
-        total_systems = Managedata.objects()
-        assign_data = Managedata.objects(laptopStatus="Assigned")
-        issue_data = Managedata.objects(laptopStatus="Issue")
-        unassign_data = Managedata.objects(laptopStatus="Unassigned")
+        total_systems = Managedata.objects(status=1)
+        assign_data = Managedata.objects(laptopStatus="Assigned", status=1)
+        issue_data = Managedata.objects(laptopStatus="Issue", status=1)
+        unassign_data = Managedata.objects(laptopStatus="Unassigned", status=1)
 
         content = {
             "request": request,
@@ -448,7 +450,7 @@ async def handle_edit_systems(data_id, request: Request):
         }
         return templates.TemplateResponse("dashboard.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "dashboard.html", {"request": request, "message": message}
         )
@@ -463,14 +465,15 @@ async def report_page(request: Request):
 async def issue_data(data_id, request: Request):
     try:
         form_data = await request.form()
+        print(form_data, "---")
         laptopid = form_data.get("laptopid").upper()
         name = form_data.get("name").upper()
-        serial_no = form_data.get("serial_no")
+        serialNo = form_data.get("serialNo")
         issue = form_data.get("issue")
-        createdOn = datetime.datetime.now()
+        createdOn = datetime.now()
         laptopStatus = form_data.get("status")
-        required_fields = [laptopid, name, serial_no, issue, createdOn, laptopStatus]
-        data = Issue_data.objects(laptopid=laptopid, serial_no=serial_no).first()
+        required_fields = [laptopid, name, serialNo, issue, createdOn, laptopStatus]
+        data = Issue_data.objects(laptopid=laptopid, serialNo=serialNo).first()
         if data:
             message = "already this System is present in issue data..."
             return templates.TemplateResponse(
@@ -494,15 +497,17 @@ async def issue_data(data_id, request: Request):
             updatedDate=createdOn,
             receivedBy=receive.receivedBy,
             createdOn=receive.createdOn,
+            status=1,
         ).save()
         Issue_data(
             laptopid=laptopid,
             managedataId=data_id,
             name=name,
-            serial_no=serial_no,
+            serialNo=serialNo,
             issue=issue,
             createdOn=createdOn,
             laptopStatus=laptopStatus,
+            status=1,
         ).save()
 
         data = Managedata.objects(id=data_id).first()
@@ -524,7 +529,7 @@ async def issue_data(data_id, request: Request):
         }
         return templates.TemplateResponse("dashboard.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "dashboard.html", {"request": request, "message": message}
         )
@@ -533,7 +538,7 @@ async def issue_data(data_id, request: Request):
 @laptops.get("/delete_issue/{data_id}")
 async def delete_issue(data_id: str, request: Request):
     try:
-        first = Issue_data.objects(id=data_id).first()
+        first = Issue_data.objects(id=data_id, status=1).first()
         if first:
             managedata_data = first.managedataId
             users = Logfiles_data.objects.order_by("-id")[0]
@@ -547,11 +552,12 @@ async def delete_issue(data_id: str, request: Request):
                 updatedDate=first.createdOn,
                 receivedBy=managedata_data.receivedBy,
                 createdOn=managedata_data.createdOn,
+                status=1,
             ).save()
             if managedata_data:
-                managedata_data.delete()
+                managedata_data.update(status=2)
 
-        Issue_data.objects(id=data_id).delete()
+        Issue_data.objects(id=data_id).update(status=2)
 
         return response_issue(request)
     except Exception as e:
@@ -567,15 +573,15 @@ async def update_laptop_issue_data(data_id, request: Request):
         form_data = await request.form()
         laptopid = form_data.get("laptopid").upper()
         name = form_data.get("name").upper()
-        serial_no = form_data.get("serial_no")
+        serialNo = form_data.get("serialNo")
         product = form_data.get("product")
         configuration = form_data.get("configuration")
-        createdOn = datetime.datetime.now()
+        createdOn = datetime.now()
         laptopStatus = form_data.get("status")
         required_fields = [
             laptopid,
             name,
-            serial_no,
+            serialNo,
             product,
             configuration,
             createdOn,
@@ -601,17 +607,19 @@ async def update_laptop_issue_data(data_id, request: Request):
                     updatedDate=createdOn,
                     receivedBy=managedata.receivedBy,
                     createdOn=managedata.createdOn,
+                    status=1,
                 ).save()
                 managedata.update(
                     laptopStatus=laptopStatus,
                     laptopid=laptopid,
                     name=name,
-                    serial_no=serial_no,
+                    serialNo=serialNo,
                     product=product,
                     configuration=configuration,
+                    status=1,
                 )
 
-                update_data.delete()
+                update_data.update(status=2)
         return response_issue(request)
     except Exception as e:
         message = "exception has occured.."
@@ -623,7 +631,7 @@ async def update_laptop_issue_data(data_id, request: Request):
 @laptops.get("/pagination_laptop_issue/{page_num}", response_class=HTMLResponse)
 async def pagination(page_num: int, request: Request):
     try:
-        user = Issue_data.objects()
+        user = Issue_data.objects(status=1)
         page = page_num
         per_page = 5
         start = (page - 1) * per_page
