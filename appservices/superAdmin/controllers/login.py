@@ -107,15 +107,19 @@ async def adminfiles(request:Request):
 
 @router.post('/logfile')
 async def logfile(request:Request):
-    form_data=await request.form()
-    email=form_data.get('email')
-    password=form_data.get('password')
-    data=Super_admin.objects(email=email,password=password).first()
-    if not data:
-        return templates.TemplateResponse('super_admin.html',{'request':request,'message':"Invalid details data..."})
-    
-    admins=Signup.objects()
-    return templates.TemplateResponse('logfile.html',{'request':request,'data':admins})
+    try:
+        form_data=await request.form()
+        email=form_data.get('email')
+        password=form_data.get('password')
+        data=Super_admin.objects(email=email,password=password).first()
+        if not data:
+            return templates.TemplateResponse('super_admin.html',{'request':request,'message':"Invalid details data..."})
+        
+        admins=Signup.objects()
+        return templates.TemplateResponse('logfile.html',{'request':request,'data':admins})
+    except Exception as e:
+        message="exception occure.."
+        return templates.TemplateResponse('logfile.html',{'request':request,'message':message})
 
 @router.get('/super_admin')
 async def super_admin(request:Request):
@@ -142,38 +146,49 @@ async def login_detail_page(request:Request):
 
 @router.get('/delete/{id}')
 async def delete_page(id,request:Request):
-    Logfiles_data.objects(loginid=id).delete()
-    Signup.objects(id=id).delete()
-    data=Signup.objects()
-    return templates.TemplateResponse('logfile.html',{'request':request,'data':data})
+    try:
+        Logfiles_data.objects(loginid=id).delete()
+        Signup.objects(id=id).delete()
+        data=Signup.objects()
+        return templates.TemplateResponse('logfile.html',{'request':request,'data':data})
+    except Exception as e:
+        message="Exception Occure..."
+        return templates.TemplateResponse('logfile.html',{'request':request,'message':"Exception Occure..."})
+
+        
     
 
 @router.get('/asserts_dashboard')
 async def dashboard(request:Request):
-    total_systems=Managedata.objects()
-    desktop_total=Desktopdata.objects()
-    other_systems=other_systemsdata.objects()
+    try:
+        total_systems=Managedata.objects()
+        desktop_total=Desktopdata.objects()
+        other_systems=other_systemsdata.objects()
 
-    
-    return templates.TemplateResponse('asserts.html',{'request': request,'total_systems': len(total_systems),'desktop_total':len(desktop_total),'other_systems_total':len(other_systems)})
-
+        
+        return templates.TemplateResponse('asserts.html',{'request': request,'total_systems': len(total_systems),'desktop_total':len(desktop_total),'other_systems_total':len(other_systems)})
+    except Exception as e:
+         return templates.TemplateResponse('asserts.html',{'request':request,'message':"Exception Occure..."})
 
 
 
 
 @router.get('/pagination/{page_num}',response_class=HTMLResponse)
 async def pagination(page_num:int,request:Request):
-    user=Logfiles_data.objects.order_by("-id")
-    page = page_num
-    per_page = 10
-    start = (page - 1) * per_page
-    end = start + per_page
-    total_pages = ceil(len(user) / per_page)
-    paginated_data = user[start:end]
-    content= {
-        "start":start,
-        "total_pages": total_pages,
-        "request":request,
-        'data':paginated_data
-    }
-    return templates.TemplateResponse('loginfiles.html',content)
+    try:
+        user=Logfiles_data.objects.order_by("-id")
+        page = page_num
+        per_page = 10
+        start = (page - 1) * per_page
+        end = start + per_page
+        total_pages = ceil(len(user) / per_page)
+        paginated_data = user[start:end]
+        content= {
+            "start":start,
+            "total_pages": total_pages,
+            "request":request,
+            'data':paginated_data
+        }
+        return templates.TemplateResponse('loginfiles.html',content)
+    except Exception as e:
+        return templates.TemplateResponse('loginfiles.html',{'request':request,'message':"Exception Occure..."})
