@@ -126,14 +126,14 @@
         <td>{{ item.laptopid }}</td>
         <td>{{ item.name }}
 
-          
+
         </td>
         <td>{{ item.serial_no }}
         </td>
         <td>{{ item.product }}</td>
         <td>{{ item.configuration }}</td>
-        <td><span class="badge bg-success">{{ item.status }}</span></td>
-        <td>{{ item.date }}</td>
+        <td><span class="badge bg-success">{{ item.laptopStatus }}</span></td>
+        <td>{{ item.createdOn.strftime('%Y-%m-%d') }}</td>
         <td>
           <a class="mx-3" data-bs-toggle="modal" data-bs-target="#exampleModal-{{ item.id }}"><i
               class="fas fa-exclamation-circle"></i></a>
@@ -158,7 +158,7 @@
 
                     <div class="mb-3">
                       <label for="serialno" class="form-label">Serial No *</label>
-                      <input type="text" class="form-control" id="serialno" placeholder="Enter Employee Name" required
+                      <input type="text" class="form-control" id="serialno" placeholder="Enter Serial No" required
                         name="serial_no" value="{{ item.serial_no }}">
                     </div>
 
@@ -242,13 +242,13 @@
 
           <div class="mb-3">
             <label for="serialno" class="form-label">Serial No *</label>
-            <input type="text" class="form-control" id="serialno" placeholder="Enter Employee Name" required
+            <input type="text" class="form-control" id="serialno" placeholder="Enter Serial No" required
               name="serial_no" value="{{ item.serial_no }}" required>
           </div>
 
           <div class="mb-3">
             <label for="productname" class="form-label">Product Name *</label>
-            <input type="text" class="form-control" id="productname" placeholder="Enter Employee Name" required
+            <input type="text" class="form-control" id="productname" placeholder="Enter Product Name" required
               name="product" value="{{ item.product }}" required>
           </div>
 
@@ -322,13 +322,13 @@
 
           <div class="mb-3">
             <label for="serialno" class="form-label">Serial No *</label>
-            <input type="text" class="form-control" id="serialno" placeholder="Enter Employee Name" required
+            <input type="text" class="form-control" id="serialno" placeholder="Enter Serial No" required
               name="serial_no">
           </div>
 
           <div class="mb-3">
             <label for="productname" class="form-label">Product Name *</label>
-            <input type="text" class="form-control" id="productname" placeholder="Enter Employee Name" required
+            <input type="text" class="form-control" id="productname" placeholder="Enter Product Name" required
               name="product">
           </div>
 
@@ -347,11 +347,11 @@
           </div>
 
           <!-- Assigned date  -->
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="issue" class="form-label">Assigned Date *</label>
             <input type="date" class="form-control" id="issue" rows="3" placeholder="Assigned date" name="date"
               required>
-          </div>
+          </div> -->
 
           <!-- Status -->
           <div class="mb-3">

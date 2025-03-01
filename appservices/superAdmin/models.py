@@ -1,7 +1,7 @@
 from mongoengine import *
  
  
-connect('dashboard',host="mongodb+srv://dattisai02:Dkumar02@cluster0.efrhv.mongodb.net/",ssl=True)
+connect('viyonaAssets',host="mongodb+srv://dattisai02:Dkumar02@cluster0.efrhv.mongodb.net/",ssl=True)
  
  
  
@@ -51,8 +51,9 @@ class other_systemsdata(Document):
     name=StringField()
     model=StringField()
     configuration=StringField()
-    date=StringField(default=None)
-    status=StringField()
+    createdOn=DateTimeField()
+    othersystemStatus=StringField()
+    status=IntField()
  
 class other_systemsissue_data(Document):
     other_systemsdataid=ReferenceField(other_systemsdata)
@@ -60,16 +61,17 @@ class other_systemsissue_data(Document):
     productid=StringField()
     name=StringField()
     issue=StringField()
-    date=StringField()
-    status=StringField()
+    createdOn=DateTimeField()
+    othersystemStatus=StringField()
+    status=IntField()
  
  
  
  
  
 class Logfiles_data(Document):
-    loginid=ReferenceField(Signup)
-    createdOn=StringField()
+    loginid=ReferenceField("Signup")
+    createdOn=DateTimeField()
     status=IntField()
  
  
@@ -89,8 +91,9 @@ class Desktopdata(Document):
     model=StringField()
     configuration=StringField()
     name=StringField()
-    date=StringField()
-    status=StringField()
+    createdOn=DateTimeField()
+    desktopstatus=StringField()
+    status=IntField()
  
  
 class Desktopissue_data(Document):
@@ -99,8 +102,9 @@ class Desktopissue_data(Document):
     productid=StringField()
     name=StringField()
     issue=StringField()
-    date=StringField(default=None)
-    status=StringField()
+    createdOn=DateTimeField()
+    desktopstatus=StringField()
+    status=IntField()
  
  
  
@@ -113,9 +117,10 @@ class HistoryField(Document):
     name=StringField()
     admin=StringField()
     action=StringField()
-    updated_date=StringField()
+    updatedDate=DateTimeField()
     createdOn=DateTimeField()
-    received_by=StringField()
+    receivedBy=StringField()
+    status=IntField()
  
    
  

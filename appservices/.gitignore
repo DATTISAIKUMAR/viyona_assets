@@ -2,8 +2,11 @@
 __pycache__/
 *.pyc
 *.pyo
+__pycache__/
+
+assetsenv/
 
 # Python virtual environment
 venv/
 assetsenv/
-*.env
+*.env 
