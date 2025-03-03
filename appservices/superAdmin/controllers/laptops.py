@@ -64,7 +64,7 @@ async def handle_add_systems(request: Request):
                 status=1,
                 laptopStatus=laptopStatus,
             ).save()
-            users = Logfiles_data.objects.order_by("-id")[0]
+            users = Logfiles_data.objects(status=1).order_by("-id")[0]
 
             historyAddData = HistoryField(
                 laptopdataid=laptopAddData.id,
@@ -82,10 +82,10 @@ async def handle_add_systems(request: Request):
             if name_empty:
                 name_empty.update(laptopStatus="Unassigned")
 
-            total_systems = Managedata.objects()
-            assign_data = Managedata.objects(laptopStatus="Assigned")
-            issue_data = Managedata.objects(laptopStatus="Issue")
-            unassign_data = Managedata.objects(laptopStatus="Unassigned")
+            total_systems = Managedata.objects(status=1)
+            assign_data = Managedata.objects(laptopStatus="Assigned", status=1)
+            issue_data = Managedata.objects(laptopStatus="Issue", status=1)
+            unassign_data = Managedata.objects(laptopStatus="Unassigned", status=1)
 
             content = {
                 "request": request,
@@ -112,10 +112,10 @@ async def handle_add_systems(request: Request):
 @laptops.get("/assign_systems", response_class=HTMLResponse)
 async def assign_systems(request: Request):
     try:
-        total_systems = Managedata.objects()
-        assign_data = Managedata.objects(laptopStatus="Assigned")
-        issue_data = Managedata.objects(laptopStatus="Issue")
-        unassign_data = Managedata.objects(laptopStatus="Unassigned")
+        total_systems = Managedata.objects(status=1)
+        assign_data = Managedata.objects(laptopStatus="Assigned", status=1)
+        issue_data = Managedata.objects(laptopStatus="Issue", status=1)
+        unassign_data = Managedata.objects(laptopStatus="Unassigned", status=1)
 
         content = {
             "request": request,
@@ -127,7 +127,7 @@ async def assign_systems(request: Request):
         }
         return templates.TemplateResponse("dashboard.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "dashboard.html", {"request": request, "message": message}
         )
@@ -152,7 +152,7 @@ async def issue_systems(request: Request):
         }
         return templates.TemplateResponse("dashboard.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "dashboard.html", {"request": request, "message": message}
         )
@@ -162,10 +162,10 @@ async def issue_systems(request: Request):
 @laptops.get("/unassign_systems", response_class=HTMLResponse)
 async def unassign_systems(request: Request):
     try:
-        total_systems = Managedata.objects()
-        assign_data = Managedata.objects(laptopStatus="Assigned")
-        issue_data = Managedata.objects(laptopStatus="Issue")
-        unassign_data = Managedata.objects(laptopStatus="Unassigned")
+        total_systems = Managedata.objects(status=1)
+        assign_data = Managedata.objects(laptopStatus="Assigned", status=1)
+        issue_data = Managedata.objects(laptopStatus="Issue", status=1)
+        unassign_data = Managedata.objects(laptopStatus="Unassigned", status=1)
 
         content = {
             "request": request,
@@ -177,7 +177,7 @@ async def unassign_systems(request: Request):
         }
         return templates.TemplateResponse("dashboard.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "dashboard.html", {"request": request, "message": message}
         )
@@ -187,10 +187,10 @@ async def unassign_systems(request: Request):
 @laptops.get("/total_systems", response_class=HTMLResponse)
 async def total_systems(request: Request):
     try:
-        total_systems = Managedata.objects()
-        assign_data = Managedata.objects(laptopStatus="Assigned")
-        issue_data = Managedata.objects(laptopStatus="Issue")
-        unassign_data = Managedata.objects(laptopStatus="Unassigned")
+        total_systems = Managedata.objects(status=1)
+        assign_data = Managedata.objects(laptopStatus="Assigned",status=1 )
+        issue_data = Managedata.objects(laptopStatus="Issue", status=1)
+        unassign_data = Managedata.objects(laptopStatus="Unassigned", status=1)
 
         content = {
             "request": request,
@@ -214,15 +214,15 @@ async def laptopid_Search(request: Request):
     try:
         form_data = request.query_params
         loginid = form_data.get("search_element").upper()
-        total_systems = Managedata.objects(laptopid__icontains=loginid)
+        total_systems = Managedata.objects(laptopid__icontains=loginid, status=1)
         assign_data = Managedata.objects(
-            laptopStatus="Assigned", laptopid__icontains=loginid
+            laptopStatus="Assigned", laptopid__icontains=loginid, status=1
         )
         issue_data = Managedata.objects(
-            laptopStatus="Issue", laptopid__icontains=loginid
+            laptopStatus="Issue", laptopid__icontains=loginid, status=1
         )
         unassign_data = Managedata.objects(
-            laptopStatus="Unassigned", laptopid__icontains=loginid
+            laptopStatus="Unassigned", laptopid__icontains=loginid, status=1
         )
         content = {
             "request": request,
@@ -235,7 +235,7 @@ async def laptopid_Search(request: Request):
         }
         return templates.TemplateResponse("dashboard.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "dashboard.html", {"request": request, "message": message}
         )
@@ -248,13 +248,13 @@ async def name_filter(request: Request):
 
         form_data = request.query_params
         loginid = form_data.get("search_element").upper()
-        total_systems = Managedata.objects(name__icontains=loginid)
+        total_systems = Managedata.objects(name__icontains=loginid, status=1)
         assign_data = Managedata.objects(
-            laptopStatus="Assigned", name__icontains=loginid
+            laptopStatus="Assigned", name__icontains=loginid, status=1
         )
-        issue_data = Managedata.objects(laptopStatus="Issue", name__icontains=loginid)
+        issue_data = Managedata.objects(laptopStatus="Issue", name__icontains=loginid, status=1)
         unassign_data = Managedata.objects(
-            laptopStatus="Unassigned", name__icontains=loginid
+            laptopStatus="Unassigned", name__icontains=loginid, status=1
         )
         content = {
             "request": request,
@@ -267,7 +267,7 @@ async def name_filter(request: Request):
         }
         return templates.TemplateResponse("dashboard.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "dashboard.html", {"request": request, "message": message}
         )
@@ -291,7 +291,7 @@ def history_function(request):
         }
         return templates.TemplateResponse("history.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "history.html", {"request": request, "message": message}
         )
@@ -311,7 +311,7 @@ async def history_laptopid(request: Request):
         content = {"request": request, "data": data}
         return templates.TemplateResponse("history.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "history.html", {"request": request, "message": message}
         )
@@ -326,7 +326,7 @@ async def name_filter(request: Request):
         content = {"request": request, "data": data}
         return templates.TemplateResponse("history.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "history.html", {"request": request, "message": message}
         )
@@ -335,7 +335,7 @@ async def name_filter(request: Request):
 @laptops.get("/pagination1/{page_num}", response_class=HTMLResponse)
 async def pagination(page_num: int, request: Request):
     try:
-        user = HistoryField.objects()
+        user = HistoryField.objects(status=1)
         page = page_num
         per_page = 10
         start = (page - 1) * per_page
@@ -350,7 +350,7 @@ async def pagination(page_num: int, request: Request):
         }
         return templates.TemplateResponse("history.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "history.html", {"request": request, "message": message}
         )
@@ -373,7 +373,7 @@ def response_issue(request):
         }
         return templates.TemplateResponse("report_issue.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "report_issue.html", {"request": request, "message": message}
         )
@@ -390,7 +390,7 @@ async def handle_edit_systems(data_id, request: Request):
         configuration = form_data.get("configuration")
         createdOn = datetime.now()
         laptopStatus = form_data.get("status")
-        data = Managedata.objects(id=data_id).first()
+        data = Managedata.objects(id=data_id, status=1).first()
         required_fields = [
             laptopid,
             serialNo,
@@ -405,8 +405,8 @@ async def handle_edit_systems(data_id, request: Request):
                 return templates.TemplateResponse(
                     "dashboard.html", {"request": request, "message": message}
                 )
-            receive = Managedata.objects(id=data_id).first()
-            users = Logfiles_data.objects.order_by("-id")[0]
+            receive = Managedata.objects(id=data_id, status=1).first()
+            users = Logfiles_data.objects(status=1).order_by("-id")[0]
             HistoryField(
                 laptopdataid=data_id,
                 laptopid=laptopid,
@@ -431,7 +431,7 @@ async def handle_edit_systems(data_id, request: Request):
         name_empty = Managedata.objects(name="")
         if name_empty:
             name_empty.update(laptopStatus="Unassigned")
-        data1 = Issue_data.objects(laptopid=laptopid, serialNo=serialNo)
+        data1 = Issue_data.objects(laptopid=laptopid, serialNo=serialNo, status=1)
         if data1:
             data.update(laptopStatus="Issue")
 
@@ -473,7 +473,7 @@ async def issue_data(data_id, request: Request):
         createdOn = datetime.now()
         laptopStatus = form_data.get("status")
         required_fields = [laptopid, name, serialNo, issue, createdOn, laptopStatus]
-        data = Issue_data.objects(laptopid=laptopid, serialNo=serialNo).first()
+        data = Issue_data.objects(laptopid=laptopid, serialNo=serialNo, status=1).first()
         if data:
             message = "already this System is present in issue data..."
             return templates.TemplateResponse(
@@ -485,8 +485,8 @@ async def issue_data(data_id, request: Request):
                 "dashboard.html", {"request": request, "message": message}
             )
 
-        receive = Managedata.objects(id=data_id).first()
-        users = Logfiles_data.objects.order_by("-id")[0]
+        receive = Managedata.objects(id=data_id, status=1).first()
+        users = Logfiles_data.objects(status=1).order_by("-id")[0]
 
         HistoryField(
             laptopdataid=data_id,
@@ -510,14 +510,14 @@ async def issue_data(data_id, request: Request):
             status=1,
         ).save()
 
-        data = Managedata.objects(id=data_id).first()
+        data = Managedata.objects(id=data_id, status=1).first()
         if data:
             data.update(laptopStatus="Issue")
 
-        total_systems = Managedata.objects()
-        assign_data = Managedata.objects(laptopStatus="Assigned")
-        issue_data = Managedata.objects(laptopStatus="Issue")
-        unassign_data = Managedata.objects(laptopStatus="Unassigned")
+        total_systems = Managedata.objects(status=1)
+        assign_data = Managedata.objects(laptopStatus="Assigned", status=1)
+        issue_data = Managedata.objects(laptopStatus="Issue", status=1)
+        unassign_data = Managedata.objects(laptopStatus="Unassigned", status=1)
 
         content = {
             "request": request,
@@ -541,7 +541,7 @@ async def delete_issue(data_id: str, request: Request):
         first = Issue_data.objects(id=data_id, status=1).first()
         if first:
             managedata_data = first.managedataId
-            users = Logfiles_data.objects.order_by("-id")[0]
+            users = Logfiles_data.objects(status=1).order_by("-id")[0]
 
             HistoryField(
                 laptopdataid=data_id,
@@ -557,11 +557,11 @@ async def delete_issue(data_id: str, request: Request):
             if managedata_data:
                 managedata_data.update(status=2)
 
-        Issue_data.objects(id=data_id).update(status=2)
+        Issue_data.objects(id=data_id, status=1).update(status=2)
 
         return response_issue(request)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "dashboard.html", {"request": request, "message": message}
         )
@@ -592,11 +592,11 @@ async def update_laptop_issue_data(data_id, request: Request):
             return templates.TemplateResponse(
                 "report_issue.html", {"request": request, "message": message}
             )
-        update_data = Issue_data.objects(id=data_id).first()
+        update_data = Issue_data.objects(id=data_id, status=1).first()
         if update_data:
             managedata = update_data.managedataId
             if managedata and laptopStatus != "Issue":
-                users = Logfiles_data.objects.order_by("-id")[0]
+                users = Logfiles_data.objects(status=1).order_by("-id")[0]
 
                 HistoryField(
                     laptopdataid=data_id,
@@ -622,7 +622,7 @@ async def update_laptop_issue_data(data_id, request: Request):
                 update_data.update(status=2)
         return response_issue(request)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "dashboard.html", {"request": request, "message": message}
         )
@@ -646,7 +646,7 @@ async def pagination(page_num: int, request: Request):
         }
         return templates.TemplateResponse("report_issue.html", content)
     except Exception as e:
-        message = "exception has occured.."
+        message = f"exception has occured..{e}"
         return templates.TemplateResponse(
             "dashboard.html", {"request": request, "message": message}
         )
