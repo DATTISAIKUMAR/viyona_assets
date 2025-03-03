@@ -116,8 +116,9 @@ class HistoryField(Document):
     name=StringField()
     admin=StringField()
     action=StringField()
-    updated_date=StringField()
-    received_date=StringField()
-    received_by=StringField()
+    updatedDate=DateTimeField()
+    createdOn=DateTimeField()
+    receivedBy=StringField()
+    status=IntField()
 
     
