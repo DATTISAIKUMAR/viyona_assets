@@ -16,7 +16,7 @@
   <!-- Header -->
   <header class="header d-flex align-items-center justify-content-between">
     <div class="logo">
-      <a href="#"><img src="../static/logo.png" alt=""></a>
+      <a href="{{ url_for('dashboard') }}"><img src="../static/logo.png" alt=""></a>
     </div>
     <a href="{{ url_for('login') }}" class="btn logout-btn">Logout</a>
   </header>

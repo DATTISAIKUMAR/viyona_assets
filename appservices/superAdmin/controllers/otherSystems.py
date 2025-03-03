@@ -4,7 +4,6 @@ from controllers.util import *
 other_systems = APIRouter()
 
 
-
 @other_systems.get('/other_systems_dashboard')
 async def other_systems_dashboard(request:Request):
     try:

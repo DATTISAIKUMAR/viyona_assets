@@ -69,9 +69,8 @@ async def login_page(request:Request):
         }
         return templates.TemplateResponse('asserts.html',content)
     except Exception as e:
-        message="exception occure..."
-        return templates.TemplateResponse('asserts.html',{'request':request,'message':message})
-
+        message="exception has occured.."
+        return templates.TemplateResponse('asserts.html', {'request': request, 'message': message})
 
 @router.post('/signup',response_class=HTMLResponse)
 async def admin_signup(request: Request):
@@ -103,9 +102,9 @@ async def admin_signup(request: Request):
 
         return RedirectResponse('/logfile1', status_code=303)
     except Exception as e:
-        message="exception occure..."
-        return templates.TemplateResponse('asserts.html',{'request':request,'message':message})
-
+        message="exception has occured.."
+        return templates.TemplateResponse('logfile.html', {'request': request, 'message': message})
+    
 @router.get('/logfile1')
 async def adminfiles(request:Request):
     admins=Signup.objects(status=1)

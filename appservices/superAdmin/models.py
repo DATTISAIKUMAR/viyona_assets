@@ -61,14 +61,13 @@ class other_systemsissue_data(Document):
     productid=StringField()
     name=StringField()
     issue=StringField()
-    createdOn=DateTimeField()
-    othersystemStatus=StringField()
-    status=IntField()
- 
- 
- 
- 
- 
+    date=StringField()
+    status=StringField()
+
+
+
+
+
 class Logfiles_data(Document):
     loginid=ReferenceField("Signup")
     createdOn=DateTimeField()
@@ -117,8 +116,8 @@ class HistoryField(Document):
     name=StringField()
     admin=StringField()
     action=StringField()
-    updatedDate=DateTimeField()
-    createdOn=DateTimeField()
-    receivedBy=StringField()
-    status=IntField()
- 
+    updated_date=StringField()
+    received_date=StringField()
+    received_by=StringField()
+
+    
