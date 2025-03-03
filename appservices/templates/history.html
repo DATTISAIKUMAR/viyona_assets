@@ -57,8 +57,8 @@
               <td>{{ item.name }}</td>
               <td> {{ item.action }}</td>
               <td> {{ item.admin }}</td>
-              <td> {{ item.updatedDate }}</td>
-              <td>{{ item.createdOn }}</td>
+              <td> {{ item.updatedDate.strftime('%Y-%m-%d') }}</td>
+              <td>{{ item.createdOn.strftime('%Y-%m-%d') }}</td>
               <td>{{ item.receivedBy }}</td>
             </tr>
             {% endfor %}
