@@ -287,8 +287,8 @@ async def handle_other_systems_systems(data_id,request: Request):
         name_empty=other_systemsdata.objects(name='')
         if name_empty:
             name_empty.update(othersystemStatus="Unassigned")
-        print(other_systemsid,productid)
-        data1=other_systemsissue_data.objects(deviceId=other_systemsid,productid=productid,status=1)
+        print(other_systemsid,deviceid)
+        data1=other_systemsissue_data.objects(deviceId=other_systemsid,productid=deviceid,status=1)
         print(data1)
         if data1:
             data.update(othersystemStatus="Issue")
@@ -411,27 +411,28 @@ async def delete_issue(data_id: str, request: Request):
     try:
         first = other_systemsissue_data.objects(id=data_id).first()
         if first:
-            other_systemsdata_data = first.other_systemsdataid 
+            other_systemsdata_data = first.otherSystemsdataid 
             users=Logfiles_data.objects.order_by("-id")[0]
 
             HistoryField(
-            other_systemsdataid=data_id,
+            otherSystemsdataid=data_id,
             laptopid=first.deviceId,
             name=first.name,
             action="Delete",
             admin=users.loginid.name,
-            updated_date=first.date,
-            received_by='Rama Krishna sir',
-            received_date=other_systemsdata_data.date
+            updatedDate=first.createdOn,
+            receivedBy='Rama Krishna sir',
+            createdOn=other_systemsdata_data.createdOn,
+            status=1
             ).save()
             if other_systemsdata_data:
-                other_systemsdata_data.delete()
+                other_systemsdata_data.update(status=2)
         
-        other_systemsissue_data.objects(id=data_id).delete()
+        other_systemsissue_data.objects(id=data_id).update(status=2)
 
         return pagenation_data(request)
     except Exception as e:
-        message="exception occure.."
+        message=f"exception occure..{e}"
         return templates.TemplateResponse('other_systems_dashboard.html',{'request':request,'message':message})
 
 
@@ -448,37 +449,37 @@ async def other_systems_update_laptop_issue_data(data_id,request:Request):
         manufacturer = form_data.get('manufacturer')
         model = form_data.get('model')
         configuration = form_data.get('configuration')
-        date = form_data.get('date')
-        status = form_data.get('status')
-        required_fields=[other_systemsid,deviceid,productid,manufacturer,model,configuration,date,status]
+        date = datetime.now()
+        othersystemStatus = form_data.get('status')
+        required_fields=[other_systemsid,deviceid,productid,manufacturer,model,configuration,othersystemStatus ]
         if(not all(required_fields)):
             message="Please enter valid fields.."
             return templates.TemplateResponse('other_systems_issues.html', {'request': request, 'message': message})
-        update_data=other_systemsissue_data.objects() .first()
+        update_data=other_systemsissue_data.objects(status=1) .first()
         print(update_data)
         # update_data=other_systemsissue_data.objects(id=ObjectId(data_id)) .first()
         if update_data:
-            managedata=update_data.other_systemsdataid
-            if managedata and status != "Issue":
+            managedata=update_data.otherSystemsdataid
+            if managedata and othersystemStatus  != "Issue":
                 users=Logfiles_data.objects.order_by("-id")[0]
 
                 HistoryField(
-                    other_systemsdataid=data_id,
+                    otherSystemsdataid=data_id,
                     laptopid=other_systemsid,
                     name=name,
                     action="Updated issue data",
                     admin=users.loginid.name,
-                    updated_date=date,
-                    received_by='Rama Krishna sir',
-                    received_date=managedata.date,
+                    updatedDate=date,
+                    receivedBy='Rama Krishna sir',
+                    createdOn=managedata.createdOn,
                     status=1
                 ).save()
-                managedata.update(othersystemStatus=status,other_systemsid=other_systemsid,deviceid=deviceid,productid=productid,name=name,manufacturer=manufacturer,model=model,configuration=configuration)
+                managedata.update(othersystemStatus=othersystemStatus ,otherSystemsid=other_systemsid,deviceid=deviceid,productid=productid,name=name,manufacturer=manufacturer,model=model,configuration=configuration)
                 
-                update_data.delete()
+                update_data.update(status=2)
         return pagenation_data(request)
     except Exception as e:
-        message="exception occure.."
+        message=f"exception occure..{e}"
         return templates.TemplateResponse('other_systems_dashboard.html',{'request':request,'message':message})
 
 
@@ -499,10 +500,10 @@ async def other_systems_loginid(request:Request):
     try:
         form_data=request.query_params
         loginid=form_data.get('search_element').upper()
-        total_systems=other_systemsdata.objects(other_systemsid__icontains=loginid,status=1)
-        assign_data=other_systemsdata.objects(othersystemStatus="Assigned",other_systemsid__icontains=loginid,status=1)
-        issue_data=other_systemsdata.objects(othersystemStatus="Issue",other_systemsid__icontains=loginid,status=1)
-        unassign_data=other_systemsdata.objects(othersystemStatus="Unassigned",other_systemsid__icontains=loginid,status=1)
+        total_systems=other_systemsdata.objects(otherSystemsid__icontains=loginid,status=1)
+        assign_data=other_systemsdata.objects(othersystemStatus="Assigned",otherSystemsid__icontains=loginid,status=1)
+        issue_data=other_systemsdata.objects(othersystemStatus="Issue",otherSystemsid__icontains=loginid,status=1)
+        unassign_data=other_systemsdata.objects(othersystemStatus="Unassigned",otherSystemsid__icontains=loginid,status=1)
         content={
             'request':request,
             'total_systems':len(total_systems),
@@ -514,7 +515,7 @@ async def other_systems_loginid(request:Request):
         }
         return templates.TemplateResponse('other_systems_dashboard.html',content)
     except Exception as e:
-        message="exception occure.."
+        message=f"exception occure..{e}"
         return templates.TemplateResponse('other_systems_dashboard.html',{'request':request,'message':message})
 
 
@@ -539,7 +540,7 @@ async def other_systems_name_filter(request:Request):
         }
         return templates.TemplateResponse('other_systems_dashboard.html',content)
     except Exception as e:
-        message="exception occure.."
+        message=f"exception occure..{e}"
         return templates.TemplateResponse('other_systems_dashboard.html',{'request':request,'message':message})
 
 

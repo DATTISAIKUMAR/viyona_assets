@@ -536,7 +536,7 @@ async def desktop_name_filter(request:Request):
 @desktop.get('/pagination_desktop_issue/{page_num}',response_class=HTMLResponse)
 async def pagination(page_num:int,request:Request):
     try:
-        user=Desktopissue_data.objects()
+        user=Desktopissue_data.objects(status=1)
         page = page_num
         per_page = 10
         start = (page - 1) * per_page
