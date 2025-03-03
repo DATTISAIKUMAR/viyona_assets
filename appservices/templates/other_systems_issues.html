@@ -89,24 +89,16 @@
             <input type="text" class="form-control" id="configuration" placeholder="e.g., Intel i5, 8GB RAM, 256GB SSD" required name="configuration" value="{{ item.otherSystemsdataid.configuration}}">
           </div>
 
-        
 
-            <!-- Assigned date  -->
-            <!-- <div class="mb-3">
-              <label for="issue" class="form-label">Assigned Date *</label>
-              <input type="date" class="form-control" id="issue" rows="3" placeholder="Assigned date" name="date" value="{{ item.date }}" required>
-            </div> -->
-
-          <!-- Status -->
           <div class="mb-3">
             <label for="status" class="form-label">Status *</label>
-            <select class="form-select" id="status" required name="status" value="{{ item.othersystemStatus}}">
-              <option value="Assigned">Assigned</option>
-              <option value="Issue">Issue Reported</option>
-              <option value="Unassigned">Unassigned</option>
+            <select class="form-select" id="status" required name="status">
+              <option value="Assigned" {% if item.othersystemStatus == 'Assigned' %}selected{% endif %}>Assigned</option>
+              <option value="Issue" {% if item.othersystemStatus == 'Issue' %}selected{% endif %}>Issue Reported</option>
+              <option value="Unassigned" {% if item.othersystemStatus == 'Unassigned' %}selected{% endif %}>Unassigned</option>
             </select>
           </div>
-
+          
           <!-- Submit Button -->
           <div class="text-center">
            

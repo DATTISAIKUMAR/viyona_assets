@@ -249,10 +249,9 @@
           <!-- Status -->
           <div class="mb-3">
             <label for="status" class="form-label">Status *</label>
-            <select class="form-select" id="status" required name="status" value="{{ item.laptopStatus }}" required>
-              <option value="Assigned">Assigned</option>
-              <!-- <option value="Issue">Issue Reported</option> -->
-              <option value="Unassigned">Unassigned</option>
+            <select class="form-select" id="status" required name="status">
+              <option value="Assigned" {% if item.laptopStatus == 'Assigned' %}selected{% endif %}>Assigned</option>
+              <option value="Unassigned" {% if item.laptopStatus == 'Unassigned' %}selected{% endif %}>Unassigned</option>
             </select>
           </div>
  
@@ -330,7 +329,6 @@
             <label for="status" class="form-label">Status *</label>
             <select class="form-select" id="status" required name="status">
               <option value="Assigned">Assigned</option>
-              <!-- <option value="Issue">Issue Reported</option> -->
               <option value="Unassigned">Unassigned</option>
             </select>
           </div>
